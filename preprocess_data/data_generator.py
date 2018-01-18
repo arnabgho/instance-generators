@@ -34,7 +34,6 @@ def processor(filename,img,instance_map,instance_dir,image_dir):
         k = random.randint(1,num_samples)
         selected=random.sample( car_ids  , k  )
         new_inst,new_img=image_creator(selected,np_instance_map,np_img)
-        print(np.unique(new_inst))
         img_new_inst=Image.fromarray(new_inst,'RGB')
         img_new_img=Image.fromarray(new_img,'RGB')
         img_new_inst.save( os.path.join( instance_dir,str(i) + '_' + filename  ))
