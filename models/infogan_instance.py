@@ -3,7 +3,7 @@ import torch
 from collections import OrderedDict
 from torch.autograd import Variable
 import util.util as util
-from .base_model import BaseModel
+from .infogan_instance_base_model import BaseModel
 from . import networks
 import random
 

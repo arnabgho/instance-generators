@@ -13,7 +13,7 @@ class InstanceDataset(Dataset):
         self.instance_root_dir=instance_root_dir
         metadata_f=open(metadata_file)
         metadata_lines=metadata_f.readlines()
-
+        self.max_inst=0
         self.names=[]
         self.numbers=[]
         for metadata_line in metadata_lines:
@@ -21,9 +21,12 @@ class InstanceDataset(Dataset):
             number = int(number.strip())
             self.names.append(name)
             self.numbers.append(number)
-
+            self.max_inst=max(number,self.max_inst)
     def __len__(self):
         return len(self.names)
+
+    def max_instances(self):
+        return self.max_inst
 
     def __getitem__(self,idx):
         name=self.names[idx]
@@ -31,12 +34,13 @@ class InstanceDataset(Dataset):
         city=name.split('_')[0]
         img_name=os.path.join(self.img_root_dir,city,name)
         img=io.imread(img_name)
-        img=img.clip(0,1)
         inst_imgs=[]
         for i in range(number):
             inst_img_name=os.path.join(self.instance_root_dir,city,str(i)+'_'+name)
             inst_img=io.imread(inst_img_name)
+            inst_img=inst_img[:,:,0]
+            inst_img=inst_img.clip(0,1)
             inst_imgs.append(inst_img)
 
-        sample={ 'image':img , 'instance_images':inst_imgs  }
+        sample={ 'image':img , 'instance_images':inst_imgs , 'num_instances':number }
         return sample
